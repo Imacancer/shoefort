@@ -1,6 +1,5 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-
 import { StarIcon, ShoppingBagIcon } from "@heroicons/react/24/solid";
 import { setAddItemToCart, setOpenCart } from "../../app/CartSlice";
 
@@ -55,7 +54,7 @@ const Item = ({
               <h1 className="text-black text-sm font-medium">₱{price}</h1>
             </div>
             <div className="flex items-center gap-1">
-              <StarIcon className="icon-style w-5 h-5 md:w-4 md:h-4" />
+              <StarIcon className="icon-style-star w-5 h-5 md:w-4 md:h-4" />
               <h1 className="md:text-sm font-normal text-slate-100">
                 {rating}
               </h1>

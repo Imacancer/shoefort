@@ -1,23 +1,19 @@
-import React from 'react';
-import { Cart, FlexContent, Footer, Hero, Navbar, Sales, Stories } from './components';
-import { heroapi, popularsales, toprateslaes, highlight, sneaker, story, footerAPI } from './data/data.js';
+import React from 'react'
+import Index from './pages/Index'
+import Login from './pages/Login'
+import Products from './pages/Products'
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
 
-const App = () => {
+function App() {
   return (
-   <>
-      <Navbar/>
-      <Cart />
-      <main className='flex flex-col gap-16 relative'>
-        <Hero heroapi={heroapi} />
-        <Sales endpoint={popularsales} ifExists />
-        <FlexContent endpoint={highlight} ifExists />
-        <Sales endpoint={toprateslaes} />
-        <FlexContent endpoint={sneaker} />
-        <Stories story={story} />
-      </main>
-      <Footer footerAPI={footerAPI} />
-   </>
+    <BrowserRouter>
+    <Routes>
+        <Route path='/' element={<Index/>}/>
+        <Route path='/Login' element={<Login/>}/>
+        <Route path='/Products' element={<Products/>}/>
+    </Routes>
+    </BrowserRouter>
   )
 }
+export default App
 
-export default App;

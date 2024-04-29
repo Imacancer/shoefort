@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -34,33 +34,39 @@
     @apply rounded-full bg-gradient-to-tr from-blue-500 to-green-500 via-teal-500;
   }
    
-  /* Theme-Colors */
-  .bg-theme {
-    background-image: url( 'public/wallpaper.png' );
-    background-size: cover;
-  }
-  /* Footer-Wallpaper */
-  .bg-theme2 {
-    background-image: url( 'public/orangy.png' );
-    background-size: cover;
-  }
-  .bg-theme-cart {
-    @apply bg-gradient-to-b from-slate-900 to-gray-900 shadow-sm shadow-gray-900;
-  }
 
+ 
+  .bg-theme-cart {
+    @apply bg-orange-500 shadow-sm;
+    transition: background-color 0.3s ease-in-out; /* Adding transition for smoother effect */
+  }
+  
+  /* Hover effect */
+  .bg-theme-cart:hover {
+    background-color: black; /* Change background color to black on hover */
+  }
+  
   /* Clip-path */
   .clip-path {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 65%);
   }  
   
-  /* Blur-Effect */
+  /* NavBar-Effect */
   .blur-effect-theme {
-    @apply bg-black bg-clip-padding backdrop-filter backdrop-blur bg-opacity-50 opacity-100 z-[100] shadow-sm transition-all duration-300;
+    @apply bg-white bg-clip-padding backdrop-filter opacity-100 z-[100] shadow-lg transition-all duration-300;
+  }
+  /* Cart-Effect */
+  .blur-effect-theme2 {
+    @apply bg-white/50 bg-clip-padding backdrop-filter backdrop-blur bg-opacity-50 opacity-100 z-[100] shadow-sm shadow-slate-100 transition-all duration-300;
   }
 
-  /* Icon Stles */
+
+  /* Icon Styles */
   .icon-style {
-    @apply h-6 w-6 sm:h-5 sm:w-5 text-slate-100 cursor-pointer transition-all duration-100 active:scale-110 leading-tight;
+    @apply h-6 w-6 sm:h-5 sm:w-5 text-black cursor-pointer transition-all duration-100 active:scale-110 leading-tight;
+  }
+  .icon-style-star {
+    @apply h-6 w-6 sm:h-5 sm:w-5 text-yellow-400 cursor-pointer transition-all duration-100 active:scale-110 leading-tight;
   }
 
   /* text-gradient */
@@ -83,9 +89,35 @@
     @apply transition-all duration-700 ease-in-out cursor-pointer;
   }
 
+  /* Nav Styles */
+  .nav-link {
+    color: black; 
+    transition: color 0.3s; 
 }
 
- /* logo-change color */
- .glow-orange {
-  filter: drop-shadow(0 0 10px rgb(255, 136, 0)) brightness(1.0);
+.nav-link:hover {
+    color: rgb(249 115 22);
 }
+
+  /*button hover*/
+  .button-theme {
+    background-color: white;
+    font-weight: 500;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/*Shop Now button*/
+.button-theme:hover {
+    background-color: black;
+    color: white;
+  }
+  
+  /*Home button active*/
+  .home-active {
+    color: rgb(249 115 22);
+    font-weight: 600;
+    
+}
+}
+
+

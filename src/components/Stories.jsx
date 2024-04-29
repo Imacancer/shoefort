@@ -59,8 +59,8 @@ const Stories = ({ story: { title, news } }) => {
                     <p className="text-sm text-justify lg:text-xs">{truncate(val.text, {length: 175})}</p>
                   </div>
                   <div className="flex items-center justify-center px-4 w-full">
-                    <a href={val.url} target="_blank" role={"button"} className="w-full bg-gradient-to-b from-orange-500 to-orange-600  text-center text-slate-100 py-1.5 button-theme">{val.btn}</a>
-                  </div>
+                  <button class="transition-all ease-in-out delay-200 hover:-translate-y-1 hover:scale-110"><a href={val.url} target="_blank" role={"button"} className="w-full bg-gradient-to-b from-orange-500 to-orange-500 text-center text-slate-100 py-1.5 button-theme hover:bg-gradient-to-b hover:from-black hover:to-black duration-300">{val.btn}</a></button> 
+                   </div>
                 </div>
               </SplideSlide>
             ))}

@@ -1,14 +1,43 @@
 import React, { useEffect, useState } from 'react'
 
-const Footer = ({ footerAPI: { titles, links } }) => {
+const Footer = ({ footerAPI: { titles, links, FooterImage } }) => {
   const [Year, setYear] = useState();
   useEffect(() => {
       const getYear = () => setYear(new Date().getFullYear());
       getYear();
   }, []);
+
+  const backgroundImageStyle = {
+    backgroundImage: `url(${FooterImage})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    height: '100%', 
+    
+    '@media (max-width: 1024px)': {
+      height: '77%', // Adjusted height for screens up to 1024px (110% of 70%)
+    },
+    
+    '@media (max-width: 768px)': {
+      height: '55%', // Adjusted height for screens up to 768px (110% of 50%)
+    },
+    
+    '@media (max-width: 640px)': {
+      height: '44%', // Adjusted height for screens up to 640px (110% of 40%)
+    },
+    
+    '@media (max-width: 480px)': {
+      height: '33%', // Adjusted height for screens up to 480px (110% of 30%)
+    },
+    
+    '@media (max-width: 360px)': {
+      height: '27%', // Adjusted height for screens up to 360px (110% of 25%)
+    },
+  };
+
   return (
    <>
-      <footer className='bg-theme2 pt-7 pb-5'>
+      <footer className='bg-theme2 pt-7 pb-5' style={backgroundImageStyle}>
         <div className='nike-container text-white'>
           <div className='grid items-start grid-cols-3 max-w-2xl w-full m-auto md:max-w-none md:gap-5'>
             {titles.map((val, i) => (
