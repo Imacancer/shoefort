@@ -5,15 +5,15 @@ import { useNavigate } from'react-router-dom';
 
 const index = () => {
 
-  const navigate = useNavigate(); // Use useNavigate hook within functional component
+  // const navigate = useNavigate(); // Use useNavigate hook within functional component
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    console.log(token);
-    if (!token) {
-      navigate('/Login'); // Use navigate to redirect
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   console.log(token);
+  //   if (!token) {
+  //     navigate('/Login'); // Use navigate to redirect
+  //   }
+  // }, [navigate]);
   
 
   return (

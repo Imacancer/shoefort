@@ -1,10 +1,11 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const { PrismaClient } = require('@prisma/client');
-const dotenv = require('dotenv');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const cors = require('cors');
+import express from 'express';
+import bodyParser from 'body-parser';
+import { PrismaClient } from '@prisma/client';
+import dotenv from 'dotenv';
+
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import cors from 'cors';
 
 dotenv.config();
 const prisma = new PrismaClient();
@@ -135,7 +136,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.use(['/products', '/'], verifyToken);
+//app.use(['/products', '/'], verifyToken);
 
 app.post('/logout', (req, res) => {
     try {
@@ -204,19 +205,16 @@ app.post('/add-products', async (req, res) => {
 app.get('/products', async (req, res) => {
     try {
         // Fetch all products with associated details
-        const products = await prisma.shoeProduct.findMany({
-            select: {
-                id: true,
-                name: true,
-                category: { select: { name: true } }, // Select category name
-                size: { select: { value: true } }, // Select size value
-                color: { select: { value: true } }, // Select color value
-                brand: true,
-                gender: true,
-                price: true,
-                images: { select: { url: true } }, // Select image URLs
+        const products = await prisma.product.findMany({
+            take: 10, // Limit the number of products to 10
+            include: {
+              variants: {
+                include: {
+                  colors: true,
+                },
+              },
             },
-        });
+          });
 
         res.json(products);
     } catch (error) {
