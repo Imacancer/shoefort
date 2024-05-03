@@ -1,7 +1,21 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { Cart, FlexContent, Footer, Hero, Navbar, Sales, Stories } from "../components";
 import { heroapi, popularsales, toprateslaes, highlight, sneaker, story, footerAPI } from '../data/data.js';
+import { useNavigate } from'react-router-dom';
+
 const index = () => {
+
+  const navigate = useNavigate(); // Use useNavigate hook within functional component
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    console.log(token);
+    if (!token) {
+      navigate('/Login'); // Use navigate to redirect
+    }
+  }, [navigate]);
+  
+
   return (
    <>
       <Navbar/>

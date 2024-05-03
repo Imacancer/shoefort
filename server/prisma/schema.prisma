@@ -1,0 +1,61 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Customer {
+    id       String @id @default(uuid())
+    name     String
+    password String
+    email    String @unique
+}
+
+model ShoeProduct {
+    id       String   @id @default(uuid()) // UUID as the primary key
+    name     String // Shoe name
+    category Category @relation(fields: [categoryId], references: [id]) // Foreign key to Category table
+    size     Size     @relation(fields: [sizeId], references: [id]) // Foreign key to Size table
+    color    Color    @relation(fields: [colorId], references: [id]) // Foreign key to Color table
+    brand    String // Brand name
+    gender   String // Gender (e.g., Male, Female, Unisex)
+    price    Int
+    images   Image[] // Array of images associated with the shoe product
+
+    // Foreign keys
+    categoryId String // Foreign key to Category table
+    sizeId     String // Foreign key to Size table
+    colorId    String // Foreign key to Color table
+}
+
+// Define the Category table
+model Category {
+    id    String        @id @default(uuid()) // UUID as the primary key
+    name  String // Category name (e.g., Running Shoes, Casual Shoes)
+    shoes ShoeProduct[] // One-to-many relationship with ShoeProduct table
+}
+
+// Define the Size table
+model Size {
+    id    String        @id @default(uuid()) // UUID as the primary key
+    value Int // Size value (e.g., 7, 8, 9)
+    shoes ShoeProduct[] // One-to-many relationship with ShoeProduct table
+}
+
+// Define the Color table
+model Color {
+    id    String        @id @default(uuid()) // UUID as the primary key
+    value String // Color value (e.g., Red, Blue, Black)
+    shoes ShoeProduct[] // One-to-many relationship with ShoeProduct table
+}
+
+// Define the Image table
+model Image {
+    id            String      @id @default(uuid()) // UUID as the primary key
+    url           String // URL of the image
+    shoeProduct   ShoeProduct @relation(fields: [shoeProductId], references: [id]) // Foreign key to ShoeProduct table
+    shoeProductId String // Foreign key to ShoeProduct table
+}
