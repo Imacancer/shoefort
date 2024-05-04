@@ -136,6 +136,26 @@ app.post('/login', async (req, res) => {
     }
 });
 
+//get customer
+app.get('/customers', async (req, res) => {
+    try {
+        // Fetch all products with associated details
+        const customers = await prisma.customer.findMany({
+            select: {
+                id: true,
+                name: true,
+                email: true,
+            }
+        });
+        
+
+        res.json(customers);
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 //app.use(['/products', '/'], verifyToken);
 
 app.post('/logout', (req, res) => {
