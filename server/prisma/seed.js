@@ -1,18 +1,38 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client";
 
-import { faker } from '@faker-js/faker';
-import bcrypt from 'bcrypt';
+import { faker } from "@faker-js/faker";
+import bcrypt from "bcrypt";
 
-
-
-const prisma = new PrismaClient()
-const colorNames = ["red", "black", "blue", "green", "yellow", "orange", "purple", "pink"];
-
+const prisma = new PrismaClient();
+const colorNames = [
+  "red",
+  "black",
+  "blue",
+  "green",
+  "yellow",
+  "orange",
+  "purple",
+  "pink",
+];
 
 // Function to convert shoe size from US to UK and CM
 function generateRandomSize() {
   // Define an array of possible shoe sizes
-  const sizes = ["6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "U0.5", "11", "11.5", "12"];
+  const sizes = [
+    "6",
+    "6.5",
+    "7",
+    "7.5",
+    "8",
+    "8.5",
+    "9",
+    "9.5",
+    "10",
+    "U0.5",
+    "11",
+    "11.5",
+    "12",
+  ];
 
   // Randomly select a size from the array
   const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
@@ -24,7 +44,8 @@ function generateRandomBoolean() {
 
 function generateRandomColorName() {
   // Randomly select a color name from the array
-  const randomColorName = colorNames[Math.floor(Math.random() * colorNames.length)];
+  const randomColorName =
+    colorNames[Math.floor(Math.random() * colorNames.length)];
   return randomColorName;
 }
 
@@ -33,7 +54,7 @@ async function clearDatabase() {
   await prisma.variant.deleteMany();
   await prisma.product.deleteMany();
   await prisma.customer.deleteMany();
-  console.log('Database cleared');
+  console.log("Database cleared");
 }
 
 async function seedDatabase() {
@@ -41,29 +62,52 @@ async function seedDatabase() {
 
   const hashedPassword = await bcrypt.hash("password", 10);
 
-  const user = await prisma.customer.create({
+  const adminUser = await prisma.user.create({
     data: {
-      name: 'John Doe',
+      name: "John Doe",
       password: hashedPassword,
-      email: 'burat@gmail.com',
+      email: "admin@gmail.com",
+      role: "admin",
     },
   });
 
+  const users = Array.from({ length: 10 }).map(() => ({
+    email: faker.internet.email(),
+    password: hashedPassword, // Generate random passwords
+    name: faker.person.fullName(),
+  }));
+
+  // Create users and customers in the database
+  for (const userData of users) {
+    const createdUser = await prisma.user.create({
+      data: userData,
+    });
+
+    await prisma.customer.create({
+      data: {
+        user: {
+          connect: { id: createdUser.id }, // Connect to the created user
+        },
+      },
+    });
+
+    console.log("User and Customer created:", createdUser);
+  }
 
   const productsData = [];
 
   // Generate 200 products related to shoes
   for (let i = 0; i < 10; i++) {
-    const productName = faker.commerce.productName() + ' Shoes'; // Ensure product is related to shoes
+    const productName = faker.commerce.productName() + " Shoes"; // Ensure product is related to shoes
     const price = faker.number.int({ min: 10, max: 500 });
     const quantity = faker.number.int({ min: 1, max: 500 });
     const size = generateRandomSize();
-    const categories = ['Mens', 'Womens', 'Kids'];
-    const img = "https://placehold.co/600x400"
+    const categories = ["Mens", "Womens", "Kids"];
+    const img = "https://placehold.co/600x400";
     const category = categories[Math.floor(Math.random() * categories.length)];
     const colorVariants = [
-      { value: generateRandomColorName()},
-      { value: generateRandomColorName()},
+      { value: generateRandomColorName() },
+      { value: generateRandomColorName() },
     ];
 
     productsData.push({
@@ -99,7 +143,7 @@ async function seedDatabase() {
             category: variant.category,
             colors: {
               create: variant.colors.map((color) => ({
-                value: color.value
+                value: color.value,
               })),
             },
           })),
@@ -114,14 +158,14 @@ async function seedDatabase() {
       },
     });
 
-    console.log('Created product:', createdProduct);
-    console.log("created user:", user);
+    console.log("Created product:", createdProduct);
+    console.log("created adminuser:", adminUser);
   }
 }
 
 seedDatabase()
   .catch((error) => {
-    console.error('Error seeding database:', error);
+    console.error("Error seeding database:", error);
   })
   .finally(async () => {
     await prisma.$disconnect();

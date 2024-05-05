@@ -7,11 +7,38 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  customer
+  admin
+}
+
+enum PaymentMethod {
+  creditCard
+  paypal
+  gcash
+}
+
+enum TransactionStatus {
+  pending
+  completed
+  cancelled
+}
+
+model User {
+  id        String @id @default(uuid())
+  email     String @unique
+  password  String
+  name      String
+  role      Role @default(customer)
+  customer  Customer?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 model Customer {
   id       String @id @default(uuid())
-  name     String
-  password String
-  email    String @unique
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String @unique
+  transactions Transaction[]
 }
 
 model Product {
@@ -21,6 +48,20 @@ model Product {
   featured     Boolean   @default(false)
   imgUrl       String?
   variants     Variant[]
+  transactions Transaction[]
+}
+
+model Transaction {
+  customerId String
+  productId String
+  amount    Int
+  payment_method PaymentMethod?
+  trannsaction_status TransactionStatus @default(pending)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  customer  Customer @relation(fields: [customerId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  @@id([customerId, productId])
 }
 
 model Variant {

@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "^1.8.5",
     "@splidejs/react-splide": "^0.7.10",
     "axios": "^1.6.8",
+    "jwt-decode": "^4.0.0",
     "ldrs": "^1.0.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.376.0",
