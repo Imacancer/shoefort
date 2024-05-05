@@ -1,12 +1,11 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Index from './pages/Index';
-import Login from './pages/Login';
-import Products from './pages/Products';
-import SignIn from './pages/sign-in';
-import Dashboard from './pages/admin';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Index from "./pages/Index";
+import Login from "./pages/Login";
+import Products from "./pages/Products";
+import SignIn from "./pages/sign-in";
+import Dashboard from "./pages/admin";
 
 function App() {
-  
   return (
     <BrowserRouter>
       <Routes>
