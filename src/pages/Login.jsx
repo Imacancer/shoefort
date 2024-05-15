@@ -18,7 +18,7 @@ const Login = () => {
     setLoading(true);
   
     try {
-      const response = await axios.post("http://localhost:4001/auth/login", {
+      const response = await axios.post("https://server-gilt-eta-18.vercel.app/auth/login", {
         email,
         password,
       });

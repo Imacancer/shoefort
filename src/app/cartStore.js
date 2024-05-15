@@ -18,7 +18,7 @@ const useCartStore = create((set) => ({
       const customerId = sessionStorage.getItem("customerId");
       console.log("Customer ID:", customerId);
 
-      const response = await axios.get(`https://shoefort.vercel.app/products/${productId}`);
+      const response = await axios.get(`https://server-gilt-eta-18.vercel.app/products/${productId}`);
       const variants = response.data;
       const variant = variants.find((variant) => variant.size === selectedSize);
 
@@ -123,7 +123,7 @@ const useCartStore = create((set) => ({
 
       const transactions = cartItems.map((item) => {
         const amount = item.price * item.cartQuantity;
-        return axios.post("http://localhost:4001/transactions", {
+        return axios.post("https://server-gilt-eta-18.vercel.app/transactions", {
           customerId,
           productId: item.productId,
           amount,

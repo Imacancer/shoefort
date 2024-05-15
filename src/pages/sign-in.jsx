@@ -19,7 +19,7 @@ const Signup = () => {
     try {
       
       const signupResponse = await axios.post(
-        "http://localhost:4001/auth/signup",
+        "https://server-gilt-eta-18.vercel.app/auth/signup",
         { name, email, password }
       );
 

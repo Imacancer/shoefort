@@ -27,7 +27,7 @@ const Index = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:4001/products');
+        const response = await axios.get('https://server-gilt-eta-18.vercel.app/products');
         setSalesItems(response.data);
         setLoading(false);
       } catch (error) {

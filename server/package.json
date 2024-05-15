@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.mjs",
-    "build": "npm i"
+    "build": "npm i",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
@@ -31,7 +32,8 @@
     "pg": "^8.11.5",
     "prisma": "^5.13.0",
     "streamifier": "^0.1.1",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "vercel": "^34.1.14"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1"

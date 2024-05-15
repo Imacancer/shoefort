@@ -15,20 +15,6 @@ const Products = () => {
   const [error, setError] = useState(null);
   const [salesItems, setSalesItems] = useState([]);
 
-  // useEffect(() => {
-  //   async function fetchProductData() {
-  //     try {
-  //       const response = await fetch('http://localhost:4001/products');
-  //       const data = await response.json();
-  //       setProducts(data);
-  //     } catch (error) {
-  //       console.error('Error fetching product data:', error);
-  //     }
-  //   }
-
-  //   fetchProductData();
-  // }, []);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -50,15 +36,12 @@ const Products = () => {
     const customerId = sessionStorage.getItem('customerId');
     console.log(token);
     console.log(customerId);
-    if (!token) {
-      navigate('/Login'); // Use navigate to redirect
-    }
   }, [navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:4001/products');
+        const response = await axios.get('https://server-gilt-eta-18.vercel.app/products');
         setSalesItems(response.data);
         setLoading(false);
       } catch (error) {

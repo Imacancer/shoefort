@@ -28,7 +28,7 @@ function Checkout() {
       };
 
       // Update transactions with the selected payment method and mark as completed
-      await axios.patch('http://localhost:4001/transactions/update-transaction', payload);
+      await axios.patch('https://server-gilt-eta-18.vercel.app/transactions/update-transaction', payload);
 
       // Clear cart item
 

@@ -75,7 +75,7 @@ const ProductPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4001/products");
+        const response = await fetch("https://server-gilt-eta-18.vercel.app/products");
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
@@ -128,7 +128,7 @@ const ProductPage = () => {
   
       console.log(formDataToSend);
   
-      const response = await fetch("http://localhost:4001/products", {
+      const response = await fetch("https://server-gilt-eta-18.vercel.app/products", {
         method: "POST",
         body: formDataToSend,
       });
@@ -154,7 +154,7 @@ const ProductPage = () => {
   const handleDelete = async (productId) => {
     try {
       const response = await fetch(
-        `http://localhost:4001/products/${productId}`,
+        `https://server-gilt-eta-18.vercel.app/${productId}`,
         {
           method: "DELETE",
         }
@@ -178,7 +178,7 @@ const ProductPage = () => {
   const handleVariantFormSubmit = async (productId, e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:4001/products/${productId}`, {
+      const response = await fetch(`https://server-gilt-eta-18.vercel.app/${productId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

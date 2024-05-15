@@ -33,7 +33,7 @@ const RequestForRepair = () => {
 
       const requestData = { ...formData, customerId };
 
-      await axios.post('http://localhost:4001/services', requestData);
+      await axios.post('https://server-gilt-eta-18.vercel.app/services', requestData);
       setFormData({
         name: '',
         email: '',
