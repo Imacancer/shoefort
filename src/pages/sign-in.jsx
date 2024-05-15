@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import COVER_IMAGE from "../assets/shoe.jpg";
+import useCartStore from "../app/cartStore";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -10,21 +11,13 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const { setCustomerId } = useCartStore();
+
   const handleSignup = async (e) => {
     e.preventDefault();
 
     try {
-      // Check if the email is available
-      const checkEmailResponse = await axios.get(
-        `http://localhost:4001/auth/signup?email=${email}`
-      );
-
-      if (checkEmailResponse.data.message === "Email Already Used") {
-        setError("Email is already in use");
-        return;
-      }
-
-      // Proceed with signup if email is available
+      
       const signupResponse = await axios.post(
         "http://localhost:4001/auth/signup",
         { name, email, password }
@@ -32,8 +25,9 @@ const Signup = () => {
 
       // Assuming the signup response contains a token upon successful signup
       if (signupResponse.data.token) {
-        // Store the token in localStorage or sessionStorage for future use
-        localStorage.setItem("token", signupResponse.data.token);
+        const { token, customerId } = signupResponse.data; // Extract customerId from response;
+        sessionStorage.setItem("customerId", customerId);
+        sessionStorage.setItem("token", token);
         // Redirect to the homepage
         navigate("/");
       } else {

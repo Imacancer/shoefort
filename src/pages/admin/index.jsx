@@ -9,7 +9,7 @@ const Dashboard = () => {
   const navigate = useNavigate(); // Use useNavigate hook within functional component
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (token === null && token.role !== "admin") {
       navigate("/Login"); // Use navigate to redirect
     }

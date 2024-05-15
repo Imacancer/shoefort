@@ -27,26 +27,36 @@ router.post("/signup", async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10); // Hashing with salt rounds = 10
 
-    // Insert the new customer into the database with hashed password
-    const newCustomer = await prisma.customer.create({
+    // Insert the new user into the database with role as "customer"
+    const newUser = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
+        role: "customer", // Set the role automatically to "customer"
+      },
+    });
+
+    // Create a corresponding row in the Customer table
+    const newCustomer = await prisma.customer.create({
+      data: {
+        userId: newUser.id,
+        // You can pass other fields related to the customer here
       },
     });
 
     // Generate JWT token
-    const token = jwt.sign({ userId: newCustomer.id }, jwtSecret, {
+    const token = jwt.sign({ userId: newUser.id }, jwtSecret, {
       expiresIn: "1h",
     });
 
-    res.status(201).json({ token });
+    res.status(201).json({ token, customerId: newCustomer.id });
   } catch (error) {
     console.error("Error signing up:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 //login route
 router.post("/login", async (req, res) => {
@@ -61,11 +71,14 @@ router.post("/login", async (req, res) => {
     // Find user by email
     const user = await prisma.user.findUnique({
       where: { email },
+      include: {
+        customer: true,
+      },
     });
 
     // If user doesn't exist, return error
     if (!user) {
-      return res.status(401).json({ error: "Invalid email or password" });
+      return res.status(401).json({ error: "User not found for email:" });
     }
 
     // Compare hashed password
@@ -73,19 +86,21 @@ router.post("/login", async (req, res) => {
 
     // If passwords don't match, return error
     if (!passwordMatch) {
-      return res.status(401).json({ error: "Invalid email or password" });
+      return res.status(401).json({ error: "Password does not match for email:" });
     }
 
+    // Generate JWT token
     const token = jwt.sign({ userId: user.id, role: user.role }, jwtSecret, {
       expiresIn: "1h",
     });
 
-    return res.status(200).json({ token });
+    return res.status(200).json({ token, customerId: user.customer ? user.customer.id : null });
   } catch (error) {
     console.error("Error during login:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 //logout route
 

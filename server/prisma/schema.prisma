@@ -21,8 +21,9 @@ model User {
 model Customer {
   id           String        @id @default(uuid())
   userId       String        @unique
-  user         User          @relation(fields: [userId], references: [id])
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
+  services     Services[]
 }
 
 model Product {
@@ -36,6 +37,7 @@ model Product {
 }
 
 model Transaction {
+  transactionId       String            @id @default(uuid())
   customerId          String
   productId           String
   amount              Int
@@ -43,10 +45,8 @@ model Transaction {
   trannsaction_status TransactionStatus @default(pending)
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
-  customer            Customer          @relation(fields: [customerId], references: [id])
-  product             Product           @relation(fields: [productId], references: [id])
-
-  @@id([customerId, productId])
+  customer            Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  product             Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Variant {
@@ -58,7 +58,7 @@ model Variant {
   status    Boolean        @default(true)
   qty       Int
   colors    ColorVariant[]
-  product   Product        @relation(fields: [productId], references: [id])
+  product   Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model ColorVariant {
@@ -66,7 +66,19 @@ model ColorVariant {
   value     String
   variantId String
   status    Boolean @default(true)
-  variant   Variant @relation(fields: [variantId], references: [id])
+  variant   Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+}
+
+model Services {
+  id               String         @id @default(uuid())
+  Name             String
+  customerId       String
+  email            String
+  typeorService    typeorService?
+  reservation_date DateTime
+  message          String
+  createdAt        DateTime       @default(now())
+  customer         Customer       @relation(fields: [customerId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
@@ -76,7 +88,7 @@ enum Role {
 
 enum PaymentMethod {
   creditCard
-  paypal
+  cash
   gcash
 }
 
@@ -90,4 +102,9 @@ enum Category {
   Mens
   Womens
   Kids
+}
+
+enum typeorService {
+  repair
+  clean
 }

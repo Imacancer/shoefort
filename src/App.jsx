@@ -6,6 +6,7 @@ import SignIn from "./pages/sign-in";
 import Dashboard from "./pages/admin";
 import RepairRequest from "./pages/RepairRequest";
 import Checkout from "./pages/Checkout";
+import SuccessPage from "./pages/successpage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="*" element={<h1>404</h1>} />
         <Route path="/Services" element={<RepairRequest/>} />
         <Route path="/Checkout" element={<Checkout/>} />
+        <Route path="/SuccessPage" element={<SuccessPage/>} />
       </Routes>
     </BrowserRouter>
   );

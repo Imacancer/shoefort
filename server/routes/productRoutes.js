@@ -49,7 +49,6 @@ router.get("/", async (req, res) => {
         variants: {
           include: {
             colors: true,
-            price: true,
           },
         },
       },
@@ -69,11 +68,10 @@ router.get("/:productId", async (req, res) => {
     // Fetch variants for the selected product
     const variants = await prisma.variant.findMany({
       where: {
-        productId: parseInt(productId), // Filter variants by product ID
+        productId: productId, // Filter variants by product ID
       },
       include: {
         colors: true,
-        prices: true,
       },
     });
 

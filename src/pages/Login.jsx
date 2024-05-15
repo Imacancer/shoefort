@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import COVER_IMAGE from "../assets/shoe.jpg";
 import { jwtDecode } from "jwt-decode";
+import useCartStore from "../app/cartStore";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,29 +11,40 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setCustomerId } = useCartStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       const response = await axios.post("http://localhost:4001/auth/login", {
         email,
         password,
       });
-
+  
       if (response.status === 200) {
-        const token = jwtDecode(response.data.token);
-        localStorage.setItem("token", token);
-
-        if (token.role === "admin") {
+        const { token, customerId } = response.data; // Extract token and customerId from response data
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("customerId", customerId);
+  
+        // Check if the token role is admin
+        const decodedToken = jwtDecode(token);
+        if (decodedToken.role === "admin") {
           navigate("/admin");
         } else {
           navigate("/");
         }
       }
     } catch (error) {
-      setError("Invalid email or password");
+      // Check if the error response contains error message
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError("Invalid email or password"); // Set a generic error message
+      }
+    } finally {
+      setLoading(false); // Ensure loading state is set to false regardless of success or failure
     }
   };
 

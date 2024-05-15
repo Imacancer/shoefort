@@ -1,51 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { selectTotalQTY, setOpenCart } from "../app/CartSlice.js";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import logo from "../assets/shoefortnewlogo.png";
 import { CircleUserRound, LogInIcon, ShoppingCart } from "lucide-react";
 import axios from "axios";
+import CartModal from "./cart/CartModal.jsx";
+import useCartStore from "../app/cartStore.js";
 
 const Navbar = ({ setLoading }) => {
   const [navState, setNavState] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileNav, setShowMobileNav] = useState(false);
-  const dispatch = useDispatch();
-  const totalQTY = useSelector(selectTotalQTY);
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false); 
+  const cartItems = useCartStore((state) => state.cartItems);
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === "/";
   const isProductsPage = location.pathname === "/Products";
-  const handleLoginClick = () => {
-    // Navigate to the Login page
-    navigate("/Login");
-  };
+  const token = sessionStorage.getItem("token"); // Get token from sessionStorage
+
   const onCartToggle = () => {
-    dispatch(
-      setOpenCart({
-        cartState: true,
-      })
-    );
+    setIsCartModalOpen((prevState) => !prevState);
   };
 
-  const onNavScroll = () => {
-    if (window.scrollY > 30) {
-      setNavState(true);
-    } else {
-      setNavState(false);
-    }
-  };
-
-  const checkIsMobile = () => {
-    if (window.innerWidth <= 640) {
-      setIsMobile(true);
-    } else {
-      setIsMobile(false);
+  const handleLogoutClick = async () => {
+    try {
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("customerId");
+      sessionStorage.removeItem("cart");
+      navigate("/login");
+    } catch (error) {
+      console.error("Failed to logout:", error);
     }
   };
 
   useEffect(() => {
+    const onNavScroll = () => {
+      if (window.scrollY > 30) {
+        setNavState(true);
+      } else {
+        setNavState(false);
+      }
+    };
+
+    const checkIsMobile = () => {
+      if (window.innerWidth <= 640) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+
     window.addEventListener("scroll", onNavScroll);
     window.addEventListener("resize", checkIsMobile);
 
@@ -56,39 +61,6 @@ const Navbar = ({ setLoading }) => {
       window.removeEventListener("resize", checkIsMobile);
     };
   }, []);
-
-  const toggleMobileNav = () => {
-    setShowMobileNav(!showMobileNav);
-  };
-
-  const handleLogoutClick = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        // Handle case where token is not available
-        return;
-      }
-
-      const response = await axios.post(
-        "http://localhost:4001/auth/logout",
-        {},
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        // Clear token from localStorage upon successful logout
-        localStorage.removeItem("token");
-        navigate("/login");
-      }
-    } catch (error) {
-      console.error("Failed to logout:", error);
-      // Handle error
-    }
-  };
 
   return (
     <>
@@ -141,15 +113,15 @@ const Navbar = ({ setLoading }) => {
                   </Link>
                 </li>
                 <li className="grid items-center">
-                  <a
-                    href="#services"
+                  <Link
+                    to="/Services"
                     className={`nav-link ${
                       navState && "transition-all duration-300"
                     }`}
                     style={{ fontWeight: 600 }}
                   >
                     Services
-                  </a>
+                  </Link>
                 </li>
                 <li className="grid items-center">
                   <a
@@ -187,7 +159,7 @@ const Navbar = ({ setLoading }) => {
               {isMobile ? (
                 <button
                   type="button"
-                  onClick={toggleMobileNav}
+                  onClick={() => setShowMobileNav(!showMobileNav)}
                   className="border-none outline-none active:scale-110 transition-all duration-300 relative"
                 >
                   <Bars3Icon
@@ -201,11 +173,23 @@ const Navbar = ({ setLoading }) => {
               )}
             </div>
             <li className="grid items-center">
-              <CircleUserRound
-                className={`icon-style ${
-                  navState && "text-gray-800 transition-all duration-300"
-                }`}
-              />
+              {!token ? (
+                <button onClick={() => navigate("/login")}>
+                  <CircleUserRound
+                    className={`icon-style ${
+                      navState && "text-gray-800 transition-all duration-300"
+                    }`}
+                  />
+                </button>
+              ) : (
+                <button onClick={handleLogoutClick}>
+                  <LogInIcon
+                    className={`icon-style ${
+                      navState && "text-gray-800 transition-all duration-300"
+                    }`}
+                  />
+                </button>
+              )}
             </li>
             <li className="grid items-center">
               <button
@@ -225,17 +209,8 @@ const Navbar = ({ setLoading }) => {
                       : "bg-orange-600 text-white shadow-slate-900"
                   }`}
                 >
-                  {totalQTY}
+                  {cartItems.length}
                 </div>
-              </button>
-            </li>
-            <li className="grid items-center">
-              <button onClick={handleLogoutClick}>
-                <LogInIcon
-                  className={`icon-style ${
-                    navState && "text-gray-800 transition-all duration-300"
-                  }`}
-                />
               </button>
             </li>
           </ul>
@@ -244,13 +219,13 @@ const Navbar = ({ setLoading }) => {
           <div className="flex items-center justify-center transition ease-out duration-100">
             <ul>
               <div
-                class="absolute right-10 z-10 mt-2 w-30 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                className="absolute right-10 z-10 mt-2 w-30 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                 role="menu"
                 aria-orientation="vertical"
                 aria-labelledby="menu-button"
-                tabindex="-1"
+                tabIndex="-1"
               >
-                <div class="py-1" role="none">
+                <div className="py-1" role="none">
                   <button
                     onClick={handleIndexClick}
                     className="text-gray-800 transition-all duration-300 block px-4 py-2 text-sm"
@@ -288,8 +263,10 @@ const Navbar = ({ setLoading }) => {
             </ul>
           </div>
         )}
+        <CartModal isOpen={isCartModalOpen} onClose={() => setIsCartModalOpen(false)} />
       </header>
     </>
   );
 };
 export default Navbar;
+

@@ -1,8 +1,10 @@
 import { DollarSign, MailIcon, ShoppingCart } from 'lucide-react';
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const RequestForRepair = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -21,7 +23,14 @@ const RequestForRepair = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const customerId = localStorage.getItem('customerId');
+      const customerId = sessionStorage.getItem('customerId');
+      console.log('customerId:', customerId);
+      if (!customerId) {
+        // Redirect to login if customerId is not present
+        alert('Please login to request a service.');
+        return;
+      }
+
       const requestData = { ...formData, customerId };
 
       await axios.post('http://localhost:4001/services', requestData);
@@ -36,6 +45,7 @@ const RequestForRepair = () => {
       });
 
       alert('Request submitted successfully!');
+      navigate('/')
     } catch (error) {
       console.error('Error submitting request:', error);
       alert('Failed to submit request. Please try again later.');
@@ -78,8 +88,8 @@ const RequestForRepair = () => {
               style={{ paddingLeft: '0px', paddingRight: '0px' }}
             >
               <option value="">Types of Service</option>
-              <option value="Repair">Repair</option>
-              <option value="Cleaning">Cleaning</option>
+              <option value="repair">Repair</option>
+              <option value="clean">Cleaning</option>
             </select>
             <select
               name="day"
