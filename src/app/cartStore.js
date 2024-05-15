@@ -18,7 +18,7 @@ const useCartStore = create((set) => ({
       const customerId = sessionStorage.getItem("customerId");
       console.log("Customer ID:", customerId);
 
-      const response = await axios.get(`http://localhost:4001/products/${productId}`);
+      const response = await axios.get(`https://shoefort.vercel.app/products/${productId}`);
       const variants = response.data;
       const variant = variants.find((variant) => variant.size === selectedSize);
 

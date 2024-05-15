@@ -13,7 +13,7 @@ const Item = ({ id, product_name, imgUrl, productId, onCheckout, onOpenModal }) 
   useEffect(() => {
     const fetchSizes = async () => {
       try {
-        const response = await fetch(`http://localhost:4001/products/${productId}`);
+        const response = await fetch(`https://shoefort.vercel.app/products/${productId}`);
         const variants = await response.json();
         const sizes = variants.map(variant => variant.size);
         setSizes(sizes);
@@ -35,7 +35,7 @@ const Item = ({ id, product_name, imgUrl, productId, onCheckout, onOpenModal }) 
     }
   
     try {
-      const response = await fetch(`http://localhost:4001/products/${productId}`);
+      const response = await fetch(`https://shoefort.vercel.app/products/${productId}`);
       const variants = await response.json();
       const variant = variants.find(variant => variant.size === selectedSize);
       
