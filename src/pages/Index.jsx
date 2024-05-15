@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FlexContent, Footer, Hero, Navbar, Stories } from "../components";
@@ -29,7 +27,7 @@ const Index = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://shoefort.vercel.app/products');
+        const response = await axios.get('http://localhost:4001/products');
         setSalesItems(response.data);
         setLoading(false);
       } catch (error) {
